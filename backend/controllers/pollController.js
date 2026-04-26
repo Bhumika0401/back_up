@@ -1,17 +1,34 @@
 const Poll = require("../models/Poll");
 
-exports.createPoll = async (req, res) => {
-    const { question, options } = req.body;
+// exports.createPoll = async (req, res) => {
+//     const { question, options } = req.body;
 
-    const poll = await Poll.create({
-        question,
-        options: options.map(opt => ({ text: opt })),
-        createdBy: req.user.id
+//     const poll = await Poll.create({
+//         question,
+//         options: options.map(opt => ({ text: opt })),
+//         createdBy: req.user.id
+//     });
+
+//     res.json(poll);
+// };
+exports.createPoll = async (req, res) => {
+  try {
+    const { question, type, options } = req.body;
+
+    const poll = new Poll({
+      question,
+      type,
+      options,
+      createdBy: req.user.id // 🔥 important
     });
 
-    res.json(poll);
-};
+    await poll.save();
 
+    res.json(poll);
+  } catch (err) {
+    res.status(500).json({ msg: "Server error" });
+  }
+};
 exports.votePoll = async (req, res) => {
     const { optionIndex } = req.body;
 

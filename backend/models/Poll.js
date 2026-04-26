@@ -8,7 +8,7 @@ const pollSchema = new mongoose.Schema({
 
   type: {
     type: String,
-    enum: ["student", "teacher", "general"], // categories
+    enum: ["student", "teacher", "general"],
     required: true
   },
 
@@ -23,7 +23,14 @@ const pollSchema = new mongoose.Schema({
         default: 0
       }
     }
-  ]
-});
+  ],
+
+  // 🔥 ADD THIS
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  }
+
+}, { timestamps: true });
 
 module.exports = mongoose.model("Poll", pollSchema);
